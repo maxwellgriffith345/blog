@@ -1,0 +1,7 @@
+[submodule "maxwellblog/themes/ananke"]
+	path = maxwellblog/themes/ananke
+	url = https://github.com/theNewDynamic/gohugo-theme-ananke.git
+[submodule "maxwellblog/public"]
+	path = maxwellblog/public
+	url = https://github.com/maxwellgriffith345/maxwellgriffith345.github.io.git
+	branch = main
