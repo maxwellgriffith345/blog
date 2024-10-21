@@ -3,11 +3,19 @@ title = 'Exponential Smoothing'
 date = 2024-10-12T17:46:11-05:00
 +++
 
-This is the intro to the post where I talk about exponential smoothing
+Applying concepts from [Forecasting Principles and Practice](https://otexts.com/fpp3/expsmooth.html) to electricty prices in Python
 
 <!--more-->
 
-[Stats Model Exponential Smoothin](https://www.statsmodels.org/stable/examples/notebooks/generated/exponential_smoothing.html#)
+## Intro
+
+This is a part four in my series to apply the time series forecasting methods presented by Hyndmam and Athanasopoulos in python. I use real world generator location marginal prices that were pulled from South West Power Pool
+
+**Concepts**: Simple Smoothing, Holt's method, Holt-Wintes' method, model selection and forecasting.
+
+**Libraries**: Stats Models, Matplotlib, Seaborn, Pandas
+
+[Stats Models Exponential Smoothing](https://www.statsmodels.org/stable/examples/notebooks/generated/exponential_smoothing.html#)
 
 
 ```python
@@ -33,7 +41,6 @@ def parse_datetime_with_timezone(dt_str):
     datetime_str = dt_str[:-3] + dt_str[-2:]
     return pd.to_datetime(datetime_str, utc=True, format="%Y-%m-%d %H:%M:%S%z")
 
-# TODO RE-Write without using "date_parser"
 df = pd.read_csv("LMPSWide2023.csv", parse_dates=['Time'], date_parser=parse_datetime_with_timezone, index_col='Time')
 
 # Make sure this is the right timezone
@@ -87,26 +94,16 @@ plt.title("Fitted Values from Simple Smoothing")
 plt.legend()
 ```
 
-
-
-
-    <matplotlib.legend.Legend at 0x1425b1df0>
-
-
-
-
-
 {{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_11_1.png"
-title="MatplotGraph" >}}
+title="Simple Smoothing" >}}
 
 
-
-* optimized $\alpha$ is nearly 1, so the most recent observations have the biggest weight
+* optimized \( \alpha \) is nearly 1, so the most recent observations have the biggest weight
 
 ### Holt's Method
 
 * Our data for one year does not present a steady trend so we wouldn't expect Holts linear trend method to improve the model greatly
-* Fit two models again the first $\alpha = 0.95$ and $\beta=.2$, fit2 we use dampening parameter $\phi$ and let it be optimized while fixing alpha and beta as in the first model
+* Fit two models again the first \( \alpha = 0.95 \) and \( \beta=.2 \), fit2 we use dampening parameter $\phi$ and let it be optimized while fixing alpha and beta as in the first model
 
 
 ```python
@@ -127,17 +124,8 @@ plt.title("Fitted Values from Holt's Trend Method")
 plt.legend()
 ```
 
-
-
-
-    <matplotlib.legend.Legend at 0x142561010>
-
-
-
-
-
-![png](Exponential_Smoothing_files/Exponential_Smoothing_16_1.png)
-
+{{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_16_1.png"
+title="Holt's Trend Method" >}}
 
 
 ### Methods with Seasonality
@@ -177,18 +165,8 @@ plt.legend()
 plt.title("Fitted Values From Holt-Winters' Method")
 ```
 
-
-
-
-    Text(0.5, 1.0, "Fitted Values From Holt-Winters' Method")
-
-
-
-
-
-![png](Exponential_Smoothing_files/Exponential_Smoothing_19_1.png)
-
-
+{{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_19_1.png"
+title="Holt-Winters' Method" >}}
 
 * We can inspect each component of the model to get a better feel for how the season component is modeled
 
@@ -219,10 +197,8 @@ plt.show()
 ```
 
 
-
-![png](Exponential_Smoothing_files/Exponential_Smoothing_21_0.png)
-
-
+{{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_21_0.png"
+title="Level, Trend, and Seasonal States" >}}
 
 ### Innovations state space models for exponential smoothing
 * turns the method for point forecast into stochastic model
@@ -258,66 +234,12 @@ results["HWWeek"] = [HWfit2.sse, HWfit2.aic, HWfit2.aicc, HWfit2.bic]
 results
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>H1</th>
-      <th>H2</th>
-      <th>HWDay</th>
-      <th>HWWeek</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>SSE</th>
-      <td>247,396.38</td>
-      <td>214,378.04</td>
-      <td>198,742.90</td>
-      <td>198,168.92</td>
-    </tr>
-    <tr>
-      <th>AIC</th>
-      <td>28,878.50</td>
-      <td>27,649.69</td>
-      <td>27,045.02</td>
-      <td>27,308.17</td>
-    </tr>
-    <tr>
-      <th>AICC</th>
-      <td>28,878.51</td>
-      <td>27,649.70</td>
-      <td>27,045.24</td>
-      <td>27,315.41</td>
-    </tr>
-    <tr>
-      <th>BIC</th>
-      <td>28,906.73</td>
-      <td>27,684.98</td>
-      <td>27,242.66</td>
-      <td>28,522.25</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
+|      | H1         | H2         | HWDay      | HWWeek     |
+|------|------------|------------|------------|------------|
+| SSE  | 247,396.38 | 214,378.04 | 198,742.90 | 198,168.92 |
+| AIC  | 28,878.50  | 27,649.69  | 27,045.02  | 27,308.17  |
+| AICC | 28,878.51  | 27,649.70  | 27,045.24  | 27,315.41  |
+| BIC  | 28,906.73  | 27,684.98  | 27,242.66  | 28,522.25  |
 
 
 * The model with the lowest AICC is the Holts Winter Seasonal where the season is set to 1 day, we will use this for forecasting
@@ -334,9 +256,8 @@ plt.show()
 ```
 
 
-
-![png](Exponential_Smoothing_files/Exponential_Smoothing_28_0.png)
-
+{{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_28_0.png"
+title="Holts-Winters' Forecast" >}}
 
 
 * The model does not perform well on the test set
@@ -355,5 +276,12 @@ plt.show()
 ```
 
 
+{{< figure src="/Exponential_Smoothing_files/Exponential_Smoothing_30_0.png"
+title="Simulations from Holts-Winters' Model" >}}
 
-![png](Exponential_Smoothing_files/Exponential_Smoothing_30_0.png)
+
+## Resources
+* Hyndman, R.J., & Athanasopoulos, G. (2021) Forecasting: principles and practice, 3rd edition, OTexts: Melbourne, Australia. OTexts.com/fpp3
+
+* Seabold, Skipper, and Josef Perktold. “statsmodels: Econometric and statistical modeling with python.” Proceedings of the 9th Python in Science Conference. 2010.
+[Exponential Smoothing Example](https://www.statsmodels.org/stable/examples/notebooks/generated/exponential_smoothing.html#)
