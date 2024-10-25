@@ -14,3 +14,6 @@ theme = 'ananke'
           inline = [['\(', '\)']]
 [params]
   math = true
+
+[markup.goldmark.renderer]
+  unsafe=true #A

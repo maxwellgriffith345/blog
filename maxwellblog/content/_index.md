@@ -1,5 +1,5 @@
 ---
-title: "Maxwel Griffith"
+title: "Maxwell Griffith"
 
 description: "Welcome to my personal site!"
 cascade:
